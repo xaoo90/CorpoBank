@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+    
+    <h:head>
+        <title>CorpoBank</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"></link>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <h:outputStylesheet library="css" name="style.css"/> 
+        <h:outputStylesheet library="css" name="bootstrap.css"></h:outputStylesheet>
+
+    </h:head>
+    
+    <h:body>
+        <div class="container">
+            <div class="image-responsive center-block" style="padding: 40px"><img src="resources/css/img/logo-big.png" alt="Cinque Terre"></img></div>
+            <h:form styleClass="form center-block">
+                <p>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon" id="basic-addon1">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </span>
+                        <h:inputText p:placeholder="Użytkownik" class="form-control" id="zlyLogin" value="#{loginBean.uname}" title="Login" required="true" requiredMessage="Uwaga! Pole Login musi zostać wypełnione.">
+                        <f:validateLength minimum="4" maximum="15" />
+                        </h:inputText>
+                    </div>
+                </p>
+                <p>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon" id="basic-addon1">
+                            <span class="glyphicon glyphicon-asterisk"></span>
+                        </span>
+                        <h:inputSecret p:placeholder="Hasło" id="zleHaslo" class="form-control" value="#{loginBean.password}" title="Hasło" required="true" requiredMessage="Uwaga! Pole Hasło musi zostać wypełnione."> 
+                        <f:validateLength minimum="4" maximum="15" />
+                        </h:inputSecret>
+                    </div>
+                </p>
+                <p>
+                    <h:commandButton class="btn btn-default btn-lg" id="loginButton" value="Zaloguj" action="#{loginBean.loginProject()}"/>
+                </p>
+                
+                
+            <!--<h:outputText value="&lt;br /&gt;" escape="false"/>-->
+            </h:form>         
+            
+            <div class="text-center">
+                <br />
+                
+                <h:message for="zlyLogin" class="alert alert-danger"/>
+                <h:message for="zleHaslo" class="alert alert-danger"/>
+
+            </div>
+        </div>
+    </h:body>
+    <!--<ui:include src="WEB-INF/jspf/Footer.xhtml" />-->
+</html>

@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    </h:head>
+    
+    <h:body>
+        <ui:include src="../WEB-INF/jspf/Header.xhtml" />
+        <div class="container" style="padding-bottom: 100px">
+
+            <ui:include src="Header.xhtml"/>
+
+            <h1>Zatwierdź przelewy</h1>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Rachunek źródłowy</th>
+                        <th>Rachunek docelowy</th>
+                        <th>Nazwa i adres odbiorcy</th>
+                        <th>Tytuł przelewu</th>
+                        <th>Kwota</th>
+                        <th>Odrzuć</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ui:repeat var="vPrzelew" value="#{przelewyBean.getImportedTransfers()}">
+                        <tr>
+                            <td>
+                                <h:outputText value="#{przelewyBean.getAccountNameByTransfer(vPrzelew)}" />
+                                <br />
+                                <h:outputText value="#{przelewyBean.getAccountNumberByTransfer(vPrzelew)}" />
+                            </td>
+                            <td>#{vPrzelew.nrRachunku}</td>
+                            <td>
+                                #{vPrzelew.nazwa}
+                                <br />
+                                #{vPrzelew.adres}
+                            </td>
+                            <td>#{vPrzelew.tytul}</td>
+                            <td>#{vPrzelew.kwota}</td>
+                            <td>
+                                <h:form>
+                                    <h:commandLink action="#{przelewyBean.denyImportedTransfer(vPrzelew)}">
+                                        <button type="button" class="btn btn-default">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true" />
+                                        </button>
+                                    </h:commandLink>
+                                </h:form>
+                            </td>
+                        </tr>
+                    </ui:repeat>
+                </tbody>
+            </table>
+            <div class="col-md-6 text-left">
+                <h:form>
+                    <h:commandLink action="#{przelewyBean.rejectImportedTransfers()}">
+                        <button class="btn btn-default">
+                            Odrzuć
+                        </button>
+                    </h:commandLink>
+                </h:form>
+            </div>
+            <div class="col-md-6 text-right">
+                <h:form>
+                    <h:commandLink action="#{przelewyBean.confirmImportedTransfers()}">
+                        <button class="btn btn-default">
+                            Zatwierdź
+                        </button>
+                    </h:commandLink>
+                </h:form>
+            </div>
+        </div>
+    </h:body>
+</html>

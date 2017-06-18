@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    
+    <ui:include src="/WEB-INF/jspf/Header.xhtml" />
+    <h:head>
+        <title>CorpoBank</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        
+        <div class="container">
+            <ui:include src="/admin/AdminHeader.xhtml" />
+            <h1>Zestawienie wpływów i wydatków</h1>
+            <h:form>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Miesiąc</th>
+                        <th>Rachunek</th>
+                        <th>Suma wpłat</th>
+                        <th>Suma wypłat</th>
+                        <th>Netto</th>
+                        <th>Rentowność</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ui:repeat var="month" value="#{calculationsBean.getMonths()}">
+                        <tr>
+                            <td>#{month}</td>
+                            <td>Suma: #{month}</td>
+                            <td class="text-right">#{calculationsBean.countTransfers(null, 2015, month, 1)} PLN</td>
+                            <td class="text-right">-#{calculationsBean.countTransfers(null, 2015, month, -1)} PLN</td>
+                            <td class="text-right">
+                                #{calculationsBean.countTransfers(null, 2015, month, 1) -
+                                  calculationsBean.countTransfers(null, 2015, month, -1)} PLN
+                            </td>
+                            <td rowspan="5">#{calculationsBean.getProfitability(2015, month)} %</td>
+                        </tr>
+                        <ui:repeat var="rachunek" value="#{rachunkiBean.pokazRachunki()}">
+                            <tr>
+                                <td></td>
+                                <td>#{rachunek.nazwa}</td>
+                                <td class="text-right">#{calculationsBean.countTransfers(rachunek, 2015, month, 1)} PLN</td>
+                                <td class="text-right">-#{calculationsBean.countTransfers(rachunek, 2015, month, -1)} PLN</td>
+                                <td class="text-right">
+                                    #{calculationsBean.countTransfers(rachunek, 2015, month, 1) -
+                                      calculationsBean.countTransfers(rachunek, 2015, month, -1)} PLN
+                                </td>
+                            </tr>
+                        </ui:repeat>
+                        <tr>
+                            <td />
+                            <td />
+                            <td />
+                            <td />
+                            <td />
+                        </tr>
+                        <ui:repeat value="#{calculationsBean.countTransfers(rachunek).toArray()}" var="entry">
+                            #{entry.key} = #{entry.value} <br/>
+                        </ui:repeat>
+                    </ui:repeat>
+
+                </tbody>
+            </table>
+            </h:form>
+        </div>
+        
+        
+    </h:body>
+</html>

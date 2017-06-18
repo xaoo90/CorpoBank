@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+    <ui:include src="../WEB-INF/jspf/Header.xhtml" />
+    <h:body>
+        <div class="container">
+            
+
+            <ui:include src="Header.xhtml"/>
+            <h1>Przelew krajowy</h1>
+            <br/>
+            <div class="form-horizontal">
+            <h:form>
+                <div class="form-group">
+                    <label for="inputSourceAccount" class="col-md-3 control-label">Rachunek źródłowy: </label>
+                    <div class="col-md-6">
+                        <h:selectOneMenu converter="accountsConverter" value="#{przelewyBean.transfer.idRachunek}" class="form-control" id="inputSourceAccount">
+                            <f:selectItems value="#{rachunkiBean.pokazRachunki()}" var="vRachunki" itemValue="#{vRachunki}" itemLabel="#{vRachunki.nazwa} (#{vRachunki.numer}) #{vRachunki.saldo} #{vRachunki.waluta}"/>
+                        </h:selectOneMenu>
+                    </div>
+                </div>            
+                
+                <div class="form-group">
+                    <label for="inputAccountNr" class="col-md-3 control-label" style="text-align: right">Rachunek docelowy: </label>
+                    <div class="col-md-6">
+                        <h:inputText p:placeholder="Rachunek odbiorcy" class="form-control" id="inputAccountNr" value="#{przelewyBean.transfer.nrRachunku}" requiredMessage="rachunek"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputRecipientName" class="col-md-3 control-label">Nazwa odbiorcy: </label>
+                    <div class="col-md-6">
+                        <h:inputText p:placeholder="Nazwa odbiorcy" class="form-control" id="inputRecipientName" value="#{przelewyBean.transfer.nazwa}" required="true" requiredMessage="nazwa"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputRecipientAddress" class="col-md-3 control-label">Adres odbiorcy: </label>
+                    <div class="col-md-6">
+                        <h:inputText p:placeholder="Adres odbiorcy" class="form-control" id="inputRecipientAddress" value="#{przelewyBean.transfer.adres}" required="false" requiredMessage="adres"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputTransferTitle" class="col-md-3 control-label">Tytuł przelewu: </label>
+                    <div class="col-md-6">
+                        <h:inputText p:placeholder="Tytuł przelewu" class="form-control" id="inputTransferTitle" value="#{przelewyBean.transfer.tytul}" required="true" requiredMessage="tytuł"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputAmount" class="col-md-3 control-label">Kwota: </label>
+                    <div class="col-md-6">
+                        <h:inputText p:placeholder="Kwota" class="form-control" id="inputAmount" value="#{przelewyBean.transfer.kwota}" required="true" requiredMessage="kwota"/>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <h:commandButton value="Zatwierdź" action="#{przelewyBean.sendTransfer()}" styleClass="btn btn-default btn-lg" style="margin: auto"/>
+                </div>
+            </h:form>
+            </div>
+        </div>
+    </h:body>
+</html>

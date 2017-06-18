@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    
+    <h:head>
+        <title>CorpoBank</title>
+    </h:head>
+    
+    <h:body>
+    <ui:include src="../WEB-INF/jspf/Header.xhtml" />
+    <div class="container" style="padding-bottom: 50px">
+            <ui:include src="Header.xhtml"/>
+
+            <div class="col-md-6 text-left">
+                <h1>Przelewy oczekujące</h1>
+            </div>
+            <div class="col-md-6 text-right">
+                <h:form>                   
+                    <h:commandLink action="#{przelewyBean.authorizeAll()}" rendered="#{controllerBean.userAllowedAccess()}">
+                        <button class="btn btn-default">
+                            Autoryzuj wszystkie
+                        </button>
+                    </h:commandLink>
+                </h:form>
+            </div>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Rachunek źródłowy</th>
+                        <th>Rachunek docelowy</th>
+                        <th>Nazwa i adres odbiorcy</th>
+                        <th>Tytuł przelewu</th>
+                        <th>Kwota</th>
+                        <th>Data wystawienia</th>
+                        <th>Autoryzacja</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ui:repeat var="vPrzelew" value="#{przelewyBean.getTransfers(2)}">
+                        <tr>
+                            <td>
+                                <h:outputText value="#{przelewyBean.getAccountNameByTransfer(vPrzelew)}" />
+                                <br />
+                                <h:outputText value="#{przelewyBean.getAccountNumberByTransfer(vPrzelew)}" />
+                            </td>
+                            <td>#{vPrzelew.nrRachunku}</td>
+                            <td>
+                                #{vPrzelew.nazwa}
+                                <br />
+                                #{vPrzelew.adres}
+                            </td>
+                            <td>#{vPrzelew.tytul}</td>
+                            <td>
+                                <h:outputText value="#{vPrzelew.kwota} " />
+                                <h:outputText value="#{przelewyBean.getAccountCurrencyByTransfer(vPrzelew)}" />                                
+                            </td>
+                            <td>
+                                <h:outputText value="#{vPrzelew.dataWystawienia}">
+                                    <f:convertDateTime pattern="dd-MM-yyyy" />
+                                </h:outputText>
+                            </td>
+                            <td>
+                                <h:form>
+                                    <h:commandLink action="#{przelewyBean.authorizeTransfer(vPrzelew)}"
+                                                   rendered="#{controllerBean.userAllowedAccess()}">
+                                        <button type="button" class="btn btn-default">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true" />
+                                        </button>
+                                    </h:commandLink>
+                                    <h:commandLink action="#{przelewyBean.denyTransfer(vPrzelew)}">
+                                        <button type="button" class="btn btn-default">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true" />
+                                        </button>
+                                    </h:commandLink>
+                                        
+                                </h:form>
+                            </td>
+                        </tr>
+                    </ui:repeat>
+                </tbody>
+            </table>
+            <div class="col-md-4 text-left">
+                <div class="dropup">
+                    <div class="btn-group">
+                        <button type="button" 
+                                class="btn btn-default dropdown-toggle" 
+                                data-toggle="dropdown" 
+                                aria-expanded="false">
+                            Wybierz rachunek 
+                            <span class="caret" />
+                        </button>
+                        <ul class="dropdown-menu" 
+                            role="menu" 
+                            aria-labelledby="dropdownMenu1">                
+                            <ui:repeat var="vRachunek" 
+                                       value="#{rachunkiBean.pokazRachunki()}">
+                                <li >
+                                    <h:form>                            
+                                        <h:commandLink styleClass="btn btn-default" 
+                                                       style="border-style: none" 
+                                                       value="#{vRachunek.nazwa} (#{vRachunek.numer})" 
+                                                       action="#{przelewyBean.setRachunek(vRachunek)}">
+                                            <span class="badge">
+                                                #{przelewyBean.getAwaitingTransfersCount(vRachunek)}
+                                            </span>
+                                        </h:commandLink>                           
+                                    </h:form>
+                                </li>
+                            </ui:repeat>
+                            <li class="divider"></li>
+                            <li>
+                                <h:form>                            
+                                    <h:commandLink styleClass="btn btn-default" 
+                                                   style="border-style: none" 
+                                                   value="Wszystkie" 
+                                                   action="#{przelewyBean.setRachunek(null)}" >
+                                        <span class="badge">
+                                            #{przelewyBean.getAwaitingTransfersCount(null)}
+                                        </span>
+                                    </h:commandLink>
+                                </h:form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 form-horizontal text-center">
+                <div class="form-horizontal">
+                    <h:form id="form" enctype="multipart/form-data">
+                        <h:inputFile id="file"
+                                     label="Wybierz plik CSV"
+                                     styleClass="btn btn-default"
+                                     value="#{przelewyBean.file}"
+                                     validator="FileValidator"
+                                     />
+                        <h:commandLink action="#{przelewyBean.upload()}">
+                            <button class="btn btn-default">
+                                Import
+                            </button>
+                        </h:commandLink>
+                    </h:form>
+                </div>
+            </div>
+            <div class="col-md-4 text-right">
+                <h:form>
+                    <h:commandLink value="Zaimportowane przelewy" 
+                                   styleClass="btn btn-default navbar-btn" 
+                                   action="#{controllerBean.goCheckTransfers()}">
+                        <span class="badge">
+                            #{przelewyBean.getImportedTransfersCount()}
+                        </span>
+                    </h:commandLink>
+                </h:form>     
+            </div>
+        </div>
+    </h:body>
+</html>
+
